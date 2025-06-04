@@ -12,19 +12,16 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 public class Animal {
-    public int x, y; // position of the person
-    private String name; // name of the person
-    private int age; // age of the person
-    private int width, height; // dimensions of the image
-    private PImage image; // image of the person
-    private PApplet app; // the canvas used to display graphical elements
+    public int x, y; // Position of the animal
+    private int width, height; // Dimensions of the image
+    private PImage image; // Image of the animal
+    private PApplet app; // The canvas used to display graphical elements
     
-    public Animal(PApplet p, int x, int y, String name, int age, String imagePath) {
+    // Primary constructor
+    public Animal(PApplet p, int x, int y, String imagePath) {
         this.app = p;
         this.x = x;
         this.y = y;
-        this.name = name;
-        this.age = age;
         this.image = app.loadImage(imagePath);
         this.width = image.width;
         this.height = image.height;
