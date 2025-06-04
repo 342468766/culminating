@@ -12,9 +12,9 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 public class Animal {
-    public int x, y; // Position of the animal
+    protected int x, y; // Position of the animal
     private int width, height; // Dimensions of the image
-    private PImage image; // Image of the animal
+    protected PImage image; // Image of the animal
     private PApplet app; // The canvas used to display graphical elements
     
     // Primary constructor
@@ -25,11 +25,6 @@ public class Animal {
         this.image = app.loadImage(imagePath);
         this.width = image.width;
         this.height = image.height;
-    }
-    
-    public void move(int dx, int dy) {
-        x += dx;
-        y -= dy;
     }
     
     public void draw() {
