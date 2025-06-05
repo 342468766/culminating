@@ -23,6 +23,8 @@ public class MySketch extends PApplet {
   private Animal rooster;
   private Animal dog;
   private Animal pig;
+  
+  private Animal background1;
 
   int stage = 0;
   
@@ -47,12 +49,13 @@ public class MySketch extends PApplet {
     rooster = new Animal(this, 100, 200, "images/rooster.png");
     dog = new Animal(this, 200, 200, "images/dog.png");
     pig = new Animal(this, 300, 200, "images/pig.png");
+    background1 = new Animal(this, -100, 0, "images/background1.png");
   }
   
   public void draw() {
     background1.draw();
     
-    if (stage == 0) {
+    if (stage == 1) {
         fill(0);
         rat.draw();
         ox.draw();
@@ -68,9 +71,12 @@ public class MySketch extends PApplet {
         pig.draw();
     }
   }
-  
-  public void mousePressed() {
-      if ()
+ 
+  public void mousePrssed() {
+      if(stage == 0) {
+          if(background1.isClicked(mouseX, mouseY)) {
+              stage = 1;
+          }
+      }
   }
-  
 }
