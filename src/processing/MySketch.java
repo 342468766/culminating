@@ -34,6 +34,8 @@ public class MySketch extends PApplet {
 
   public void setup() {
     background(255);
+    textSize(20);
+    
     
     String animals[] = new String[12];
     
@@ -53,8 +55,12 @@ public class MySketch extends PApplet {
   }
   
   public void draw() {
-    background1.draw();
-    
+    if(stage == 0) {
+      background1.draw();
+      text("Long ago, there was a Great Race with 12", 25 , 75);
+      text("animals competing for a Chinese Zodiac Spot...", 0, 100);
+    }
+         
     if (stage == 1) {
         fill(0);
         rat.draw();
@@ -72,9 +78,9 @@ public class MySketch extends PApplet {
     }
   }
  
-  public void mousePrssed() {
+  public void keyPressed() {
       if(stage == 0) {
-          if(background1.isClicked(mouseX, mouseY)) {
+          if(keyCode == ENTER) {
               stage = 1;
           }
       }
