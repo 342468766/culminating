@@ -32,23 +32,25 @@ public class MySketch extends PApplet {
 
   public void setup() {
     background(255);
-    rat = new Animal(this, 75, 100, "images/rat.png");
-    ox = new Animal(this, 150, 100, "images/ox.png");
-    tiger = new Animal(this, 225, 100, "images/tiger.png");
-    rabbit = new Animal(this, 300, 100, "images/rabbit.png");
-    dragon = new Animal(this, 75, 200, "images/dragon.png");
-    snake = new Animal(this, 150, 200, "images/snake.png");
-    horse = new Animal(this, 225, 200, "images/horse.png");
-    sheep = new Animal(this, 300, 200, "images/sheep.png");
-    monkey = new Animal(this, 75, 300, "images/monkey.png");
-    rooster = new Animal(this, 150, 300, "images/rooster.png");
-    dog = new Animal(this, 0, 225, "images/dog.png");
-    pig = new Animal(this, 0, 300, "images/pig.png");
-
+    
+    String animals[] = new String[12];
+    
+    rat = new Animal(this, 0, 0, "images/rat.png");
+    ox = new Animal(this, 100, 0, "images/ox.png");
+    tiger = new Animal(this, 200, 0, "images/tiger.png");
+    rabbit = new Animal(this, 300, 0, "images/rabbit.png");
+    dragon = new Animal(this, 0, 100, "images/dragon.png");
+    snake = new Animal(this, 100, 100, "images/snake.png");
+    horse = new Animal(this, 200, 100, "images/horse.png");
+    sheep = new Animal(this, 300, 100, "images/sheep.png");
+    monkey = new Animal(this, 0, 200, "images/monkey.png");
+    rooster = new Animal(this, 100, 200, "images/rooster.png");
+    dog = new Animal(this, 200, 200, "images/dog.png");
+    pig = new Animal(this, 300, 200, "images/pig.png");
   }
   
   public void draw() {
-    background(255);
+    background1.draw();
     
     if (stage == 0) {
         fill(0);
@@ -66,4 +68,9 @@ public class MySketch extends PApplet {
         pig.draw();
     }
   }
+  
+  public void mousePressed() {
+      if ()
+  }
+  
 }
