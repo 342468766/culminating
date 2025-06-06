@@ -27,10 +27,12 @@ public class Animal {
         this.height = image.height;
     }
     
+    // Draw the images
     public void draw() {
         app.image(image, x, y);
     }
     
+    // Rectangular collision
     public boolean isCollidingWith(Animal other) {
         boolean isLeftOfOtherRight = x < other.x + other.width;
         boolean isRightOfOtherLeft =  + width > other.x;
@@ -41,6 +43,7 @@ public class Animal {
                 && isAboveOtherBottom & isBelowOtherTop;
     }
     
+    // Mouse collision detection
     public boolean isClicked(int mouseX, int mouseY) {
         int centerX = x + (image.pixelWidth/2);
         int centerY = y + (image.pixelHeight/2);

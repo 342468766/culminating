@@ -11,70 +11,75 @@ package processing;
 import processing.core.PApplet;
 
 public class MySketch extends PApplet {
-  private Animal rat;
-  private Animal ox;
-  private Animal tiger;
-  private Animal rabbit;
-  private Animal dragon;
-  private Animal snake;
-  private Animal horse;
-  private Animal sheep;
-  private Animal monkey;
-  private Animal rooster;
-  private Animal dog;
-  private Animal pig;
+  // Initalize variables and arrays
+  private Animal[] animals = new Animal[12];
   
   private Animal background1;
 
   int stage = 0;
   
+  // Settings
   public void settings() {
     size(400, 400);
   }
 
+  // Setup
   public void setup() {
     background(255);
     textSize(20);
+       
+    // Add animals to array
+    animals[0] = new Animal(this, 0, 0, "images/rat.png");
+    animals[1] = new Animal(this, 100, 0, "images/ox.png");
+    animals[2] = new Animal(this, 200, 0, "images/tiger.png");
+    animals[3] = new Animal(this, 300, 0, "images/rabbit.png");
+    animals[4] = new Animal(this, 0, 150, "images/dragon.png");
+    animals[5] = new Animal(this, 100, 150, "images/snake.png");
+    animals[6] = new Animal(this, 200, 150, "images/horse.png");
+    animals[7] = new Animal(this, 300, 150, "images/sheep.png");
+    animals[8] = new Animal(this, 0, 300, "images/monkey.png");
+    animals[9] = new Animal(this, 100, 300, "images/rooster.png");
+    animals[10] = new Animal(this, 200, 300, "images/dog.png");
+    animals[11] = new Animal(this, 300, 300, "images/pig.png");
     
-    
-    String animals[] = new String[12];
-    
-    rat = new Animal(this, 0, 0, "images/rat.png");
-    ox = new Animal(this, 100, 0, "images/ox.png");
-    tiger = new Animal(this, 200, 0, "images/tiger.png");
-    rabbit = new Animal(this, 300, 0, "images/rabbit.png");
-    dragon = new Animal(this, 0, 100, "images/dragon.png");
-    snake = new Animal(this, 100, 100, "images/snake.png");
-    horse = new Animal(this, 200, 100, "images/horse.png");
-    sheep = new Animal(this, 300, 100, "images/sheep.png");
-    monkey = new Animal(this, 0, 200, "images/monkey.png");
-    rooster = new Animal(this, 100, 200, "images/rooster.png");
-    dog = new Animal(this, 200, 200, "images/dog.png");
-    pig = new Animal(this, 300, 200, "images/pig.png");
+    // Create backgrounds
     background1 = new Animal(this, -100, 0, "images/background1.png");
   }
   
+  // Draw
   public void draw() {
     if(stage == 0) {
       background1.draw();
-      text("Long ago, there was a Great Race with 12", 25 , 75);
-      text("animals competing for a Chinese Zodiac Spot...", 0, 100);
-    }
-         
-    if (stage == 1) {
+      fill(0);
+      text("Long ago, there was a Great Race with 12", 30 , 175);
+      text("animals competing for a Chinese Zodiac spot", 10, 200);
+      text("Now it's your turn to race. (Press Enter)", 35, 225);
+    } else if (stage == 1) {
+        background1.draw();
         fill(0);
-        rat.draw();
-        ox.draw();
-        tiger.draw();
-        rabbit.draw();
-        dragon.draw();
-        snake.draw();
-        horse.draw();
-        sheep.draw();
-        monkey.draw();
-        rooster.draw();
-        dog.draw();
-        pig.draw();
+        for (int i = 0; i < animals.length; i++) {
+            animals[i].draw();
+        }
+    } else if (stage == 2) {
+        background(255);
+    } else if (stage == 3) {
+        background(255);
+    } else if (stage == 4) {
+        background(255);
+    } else if (stage == 5) {
+        background(255);
+    } else if (stage == 6) {
+        background(255);
+    } else if (stage == 7) {
+        background(255);
+    } else if (stage == 8) {
+        background(255);
+    } else if (stage == 9) {
+        background(255);
+    } else if (stage == 10) {
+        background(255);
+    } else if (stage == 11) {
+        background(255);
     }
   }
  
@@ -82,6 +87,15 @@ public class MySketch extends PApplet {
       if(stage == 0) {
           if(keyCode == ENTER) {
               stage = 1;
+          }
+      }
+  }
+  
+  public void mousePressed() {
+      for (int i = 0; i < animals.length; i++) {
+          if(animals[i].isClicked(mouseX, mouseY)) {
+              stage = i + 2;
+              break;
           }
       }
   }
