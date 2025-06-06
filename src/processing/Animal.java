@@ -27,6 +27,16 @@ public class Animal {
         this.height = image.height;
     }
     
+    public void move(int dx, int dy) {
+        x += dx;
+        y += dy;
+    }
+    
+    public void setPosition(int dx, int dy) {
+        x = dx;
+        y = dy;
+    }
+    
     // Draw the images
     public void draw() {
         app.image(image, x, y);
