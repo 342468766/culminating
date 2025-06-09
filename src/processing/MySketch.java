@@ -19,9 +19,11 @@ public class MySketch extends PApplet {
   private Animal background3;
   
   private Animal log;
+  private Animal eyes;
 
   int stage = 0;
-  int movement = 0;
+  int horseMovement = 0;
+  int eyeMovement = 0;
   
   // Settings
   public void settings() {
@@ -54,7 +56,8 @@ public class MySketch extends PApplet {
 
     // Create other sprites
     log = new Animal(this, 225, 225, "images/log.png");
-    
+    eyes = new MoveAnimals(this, 200, 300, "images/eyes.png", -5);
+
   }
   
   // Draw
@@ -66,14 +69,16 @@ public class MySketch extends PApplet {
         text("Long ago, there was a Great Race with 12", 30 , 175);
         text("animals competing for a Chinese Zodiac spot", 10, 200);
         text("Now it's your turn to race.", 100, 225);
-        text("(Press Enter)", 140, 330);
+        text("(Press ENTER)", 140, 330);
     // Animal select
     } else if (stage == 1) {
         background1.draw();
         fill(0);
         for (int i = 0; i < animals.length; i++) {
             animals[i].draw();
+            animals[i].setPosition(animals[i].x, animals[i].y);
         }
+       
     // Animal games
     // Rat and Ox game
     } else if (stage == 2 || stage == 3) {
@@ -123,6 +128,12 @@ public class MySketch extends PApplet {
     } else if (stage == 7 || stage == 8) {
         background3.draw();
         
+        fill(255);
+        
+        // Game explanation
+        text("Catch the horse and avoid the eyes!" , 50 , 40);
+        text("Use arrow keys to move" , 100, 60);
+        
         // Keyboard controls
         MoveAnimals snake = (MoveAnimals) animals[5];
         if (keyPressed) {
@@ -141,29 +152,59 @@ public class MySketch extends PApplet {
         MoveAnimals horse = (MoveAnimals) animals[6];
         horse.move(0, horse.getSpeed());
         
-        if (movement == 0) {
+        if (horseMovement == 0) {
             if (horse.y < 0 || horse.y > height - 100) {
                 horse.setSpeed(horse.getSpeed() * - 1);
                 horse.setPosition(200, 0);
-                movement = 1;
+                horseMovement = 1;
             }
-        } else if (movement == 1) {
+        } else if (horseMovement == 1) {
             if (horse.y < 0 || horse.y > height - 100) {
                 horse.setSpeed(horse.getSpeed() * - 1);
                 horse.setPosition(300, 300);
-                movement = 2;
+                horseMovement = 2;
             }    
-        } else if (movement == 2) {
+        } else if (horseMovement == 2) {
             if (horse.y < 0 || horse.y > height - 100) {
                 horse.setSpeed(horse.getSpeed() * - 1);
                 horse.setPosition(0, 0);
-                movement = 3;
+                horseMovement = 3;
             }
-        } else if (movement == 3) {
+        } else if (horseMovement == 3) {
             if (horse.y < 0 || horse.y > height - 100) {
                 horse.setSpeed(horse.getSpeed() * - 1);
                 horse.setPosition(100, 300);
-                movement = 0;
+                horseMovement = 0;
+            }
+        }
+        
+        // Horse eye movement
+        MoveAnimals eye = (MoveAnimals) eyes;
+        eyes.move(0, eye.getSpeed());
+        
+        if (eyeMovement == 0) {
+            if (eye.y < 0 || eye.y > height - 100) {
+                eye.setSpeed(eye.getSpeed() * - 1);
+                eye.setPosition(300, 0);
+                eyeMovement = 1;
+            }
+        } else if (eyeMovement == 1) {
+            if (eye.y < 0 || eye.y > height - 100) {
+                eye.setSpeed(eye.getSpeed() * - 1);
+                eyes.setPosition(0, 300);
+                eyeMovement = 2;
+            }    
+        } else if (eyeMovement == 2) {
+            if (eye.y < 0 || eye.y > height - 100) {
+                eye.setSpeed(eye.getSpeed() * - 1);
+                eye.setPosition(100, 0);
+                eyeMovement = 3;
+            }
+        } else if (eyeMovement == 3) {
+            if (eyes.y < 0 || eye.y > height - 100) {
+                eye.setSpeed(eye.getSpeed() * - 1);
+                eye.setPosition(200, 300);
+                eyeMovement = 0;
             }
         }
         
@@ -173,6 +214,7 @@ public class MySketch extends PApplet {
         // Draw sprites
         animals[6].draw();
         animals[5].draw();
+        eyes.draw();
         
     // Sheep, Monkey and Rooster game
     } else if (stage == 9 || stage == 10|| stage == 11) {
@@ -186,19 +228,39 @@ public class MySketch extends PApplet {
     // Win screen
     } else if (stage == 14) {
         background(255);
+        fill(0);
         text("You Win!!!", 150, 200);
+        text("(Press ENTER for back to menu)", 70, 330);
+        text("(Press SHIFT for play history)", 80, 360);    
+    // Fail screen
+    } else if (stage == 15) {
+        background(255);
+        fill(0);
+        text("Try Again", 155, 200);
+        text("(Press ENTER for back to menu)", 70, 330);
+        text("(Press SHIFT for play history)", 80, 360);    
+    // Play history
+    } else if (stage == 16) {
+        background(255);
     }
-        
-    
   }
  
   public void keyPressed() {
+      // Move to animal selection
       if(stage == 0) {
           if(keyCode == ENTER) {
               stage = 1;
           }
+      // Move to menu or play history
+      } else if (stage == 14 || stage == 15) {
+          if(keyCode == ENTER) {
+              stage = 1;
+          } else if(keyCode == SHIFT) {
+              stage = 16;
+          }
       }
   }
+  
   
   public void mousePressed() {
       for (int i = 0; i < animals.length; i++) {
@@ -220,8 +282,11 @@ public class MySketch extends PApplet {
   }
   
   public void drawCollisions() {
+      // Snake and Horse game collision detected
       if (animals[5].isCollidingWith(animals[6])) {
           stage = 14;
+      } else if (animals[5].isCollidingWith(eyes)) {
+          stage = 15;
       }
   }
   
