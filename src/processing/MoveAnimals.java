@@ -19,11 +19,6 @@ public class MoveAnimals extends Animal {
         this.speed = speed;
     }
     
-    public void move(int dx, int dy) {
-        x += dx;
-        y -= dy;
-    }
-    
     public int getSpeed() {
         return speed;
     }

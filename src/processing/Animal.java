@@ -13,7 +13,7 @@ import processing.core.PImage;
 
 public class Animal {
     protected int x, y; // Position of the animal
-    private int width, height; // Dimensions of the image
+    protected int width, height; // Dimensions of the image
     protected PImage image; // Image of the animal
     private PApplet app; // The canvas used to display graphical elements
     
@@ -44,10 +44,10 @@ public class Animal {
     
     // Rectangular collision
     public boolean isCollidingWith(Animal other) {
-        boolean isLeftOfOtherRight = x < other.x + other.width;
-        boolean isRightOfOtherLeft =  + width > other.x;
-        boolean isAboveOtherBottom = y < other.y + other.height;
-        boolean isBelowOtherTop = y + height > other.y;
+        boolean isLeftOfOtherRight = x < other.x + other.width - 20;
+        boolean isRightOfOtherLeft = x + width - 20 > other.x;
+        boolean isAboveOtherBottom = y < other.y + other.height - 20;
+        boolean isBelowOtherTop = y + height - 20 > other.y;
         
         return isLeftOfOtherRight && isRightOfOtherLeft
                 && isAboveOtherBottom & isBelowOtherTop;
