@@ -20,10 +20,14 @@ public class MySketch extends PApplet {
   
   private Animal log;
   private Animal eyes;
+  private Animal ball;
+  private Animal potato;
 
   int stage = 0;
-  int horseMovement = 0;
-  int eyeMovement = 0;
+  
+  private int horseMovement = 0;
+  private int eyeMovement = 0;  
+  private static int count = 0;
   
   // Settings
   public void settings() {
@@ -36,7 +40,7 @@ public class MySketch extends PApplet {
     textSize(20);
        
     // Add animals to array and create animal sprites
-    animals[0] = new Animal(this, 0, 0, "images/rat.png");
+    animals[0] = new Animal(this, 25, 25, "images/rat.png");
     animals[1] = new Animal(this, 100, 0, "images/ox.png");
     animals[2] = new Animal(this, 215, 25, "images/tiger.png");
     animals[3] = new Animal(this, 325, 25, "images/rabbit.png");
@@ -46,8 +50,8 @@ public class MySketch extends PApplet {
     animals[7] = new Animal(this, 300, 150, "images/sheep.png");
     animals[8] = new Animal(this, 0, 300, "images/monkey.png");
     animals[9] = new Animal(this, 100, 300, "images/rooster.png");
-    animals[10] = new Animal(this, 200, 300, "images/dog.png");
-    animals[11] = new Animal(this, 300, 300, "images/pig.png");
+    animals[10] = new MoveAnimals(this, 210, 310, "images/dog.png", 3);
+    animals[11] = new MoveAnimals(this, 310, 310, "images/pig.png", 3);
     
     // Create background sprites
     background1 = new Animal(this, -100, 0, "images/background1.png");
@@ -57,6 +61,8 @@ public class MySketch extends PApplet {
     // Create other sprites
     log = new Animal(this, 225, 225, "images/log.png");
     eyes = new MoveAnimals(this, 200, 300, "images/eyes.png", -5);
+    ball = new Animal(this, 225, 225, "images/ball.png");
+    potato = new Animal(this, 225, 225, "images/potato.png");
 
   }
   
@@ -74,6 +80,21 @@ public class MySketch extends PApplet {
     } else if (stage == 1) {
         background1.draw();
         fill(0);
+        
+        // Set and reset positions
+        animals[0].setPosition(25, 25);
+        animals[1].setPosition(100, 0);
+        animals[2].setPosition(215, 25);
+        animals[3].setPosition(325, 25);
+        animals[4].setPosition(0, 150);
+        animals[5].setPosition(125, 175);
+        animals[6].setPosition(200, 150);
+        animals[7].setPosition(300, 150);
+        animals[8].setPosition(0, 300);
+        animals[9].setPosition(100, 300);
+        animals[10].setPosition(210, 310);
+        animals[11].setPosition(310, 310);
+        
         for (int i = 0; i < animals.length; i++) {
             animals[i].draw();
             animals[i].setPosition(animals[i].x, animals[i].y);
@@ -131,7 +152,7 @@ public class MySketch extends PApplet {
         fill(255);
         
         // Game explanation
-        text("Catch the horse and avoid the eyes!" , 50 , 40);
+        text("Surprise the horse and avoid the eyes!" , 50 , 40);
         text("Use arrow keys to move" , 100, 60);
         
         // Keyboard controls
@@ -221,10 +242,120 @@ public class MySketch extends PApplet {
         background2.draw();
     // Dog game
     } else if (stage == 12) {
-        background2.draw();
+        background3.draw();
+        
+        fill(255);
+        
+        // Game explanation
+        text("The dog is distracted. Catch ten balls!" , 50 , 40);
+        text("Use arrow keys to move" , 100, 60);
+        text("Balls Collected: " + count, 125, 80);
+        
+        // Keyboard controls
+        MoveAnimals dog = (MoveAnimals) animals[10];
+        if (keyPressed) {
+            if(keyCode == LEFT) {
+                dog.move(-dog.getSpeed(), 0);
+            } else if (keyCode == RIGHT) {
+                dog.move(dog.getSpeed(), 0);
+            } else if (keyCode == UP) {
+                dog.move(0, -dog.getSpeed());
+            } else if (keyCode == DOWN) {
+                dog.move(0, dog.getSpeed());
+            }
+        }
+        
+        // Ball spawns;
+        if (count == 0) {
+            ball.setPosition(225, 225);
+        } else if (count == 1) {
+            ball.setPosition(10, 10);
+        } else if (count == 2) {
+            ball.setPosition(150, 300);
+        } else if (count == 3) {
+            ball.setPosition(300, 50);
+        } else if (count == 4) {
+            ball.setPosition(25, 250);
+        } else if (count == 5) {
+            ball.setPosition(150, 200);
+        } else if (count == 6) {
+            ball.setPosition(100, 150);
+        } else if (count == 7) {
+            ball.setPosition(300, 10);
+        } else if (count == 8) {
+            ball.setPosition(10, 350);
+        } else if (count == 9) {
+            ball.setPosition(200, 200);
+        // Win condition
+        } else if (count == 10) {
+            stage = 14;
+        }
+        
+        // Call draw collsions method
+        drawCollisions();
+        
+         // Draw sprites
+        animals[10].draw();
+        ball.draw();
+        
     // Pig game
     } else if (stage == 13) {
-        background2.draw();
+        background3.draw();
+        
+        fill(255);
+        
+        // Game explanation
+        text("The pig is hungry. Catch ten potatoes!" , 50 , 40);
+        text("Use arrow keys to move" , 100, 60);
+        text("Potatoes Collected: " + count, 125, 80);
+        
+        // Keyboard controls
+        MoveAnimals pig = (MoveAnimals) animals[11];
+        if (keyPressed) {
+            if(keyCode == LEFT) {
+                pig.move(-pig.getSpeed(), 0);
+            } else if (keyCode == RIGHT) {
+                pig.move(pig.getSpeed(), 0);
+            } else if (keyCode == UP) {
+                pig.move(0, -pig.getSpeed());
+            } else if (keyCode == DOWN) {
+                pig.move(0, pig.getSpeed());
+            }
+        }
+        
+        // Ball spawns;
+        if (count == 0) {
+            potato.setPosition(225, 225);
+        } else if (count == 1) {
+            potato.setPosition(10, 10);
+        } else if (count == 2) {
+            potato.setPosition(150, 300);
+        } else if (count == 3) {
+            potato.setPosition(300, 50);
+        } else if (count == 4) {
+            potato.setPosition(25, 250);
+        } else if (count == 5) {
+            potato.setPosition(150, 200);
+        } else if (count == 6) {
+            potato.setPosition(100, 150);
+        } else if (count == 7) {
+            potato.setPosition(300, 10);
+        } else if (count == 8) {
+            potato.setPosition(10, 350);
+        } else if (count == 9) {
+            potato.setPosition(200, 200);
+        // Win condition
+        } else if (count == 10) {
+            stage = 14;
+        }
+        
+        // Call draw collsions method
+        drawCollisions();
+        
+         // Draw sprites
+        animals[11].draw();
+        potato.draw();
+        
     // Win screen
     } else if (stage == 14) {
         background(255);
@@ -264,16 +395,25 @@ public class MySketch extends PApplet {
   
   public void mousePressed() {
       for (int i = 0; i < animals.length; i++) {
+          // Go to stage based on selected animal
           if(animals[i].isClicked(mouseX, mouseY)) {
               stage = i + 2;
           
+          // Set animal positions
+          // Set rabbit and dragon position
           if (stage == 5 || stage == 6) {
-            // Set animal positions
              animals[3].setPosition(250, 200); 
              animals[4].setPosition(300, 75);
+          // Set snake and horse position
           } else if (stage == 7 || stage == 8) {
              animals[5].setPosition(0, 200); 
              animals[6].setPosition(100, 300);
+          // Set dog position
+          } else if (stage == 12) {
+             animals[10].setPosition(0, 200);
+          // Set pig position
+          } else if (stage == 13) {
+             animals[11].setPosition(0, 200);
           }
           
           break;
@@ -287,6 +427,12 @@ public class MySketch extends PApplet {
           stage = 14;
       } else if (animals[5].isCollidingWith(eyes)) {
           stage = 15;
+      // Dog game collision detected
+      } else if (animals[10].isCollidingWith(ball)) {
+          count++;
+      // Pig game collision detected
+      } else if (animals[11].isCollidingWith(potato)) {
+          count++;
       }
   }
   
