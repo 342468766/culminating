@@ -31,7 +31,7 @@ public class Animal {
         x += dx;
         y += dy;
     }
-    
+
     public void setPosition(int dx, int dy) {
         x = dx;
         y = dy;

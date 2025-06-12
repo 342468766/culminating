@@ -44,8 +44,8 @@ public class MySketch extends PApplet {
        
     // Add animals to array and create animal sprites
     animals[0] = new MoveAnimals(this, 25, 25, "images/rat.png", 2);
-    animals[1] = new MoveAnimals(this, 100, 0, "images/ox.png", 3);
-    animals[2] = new Animal(this, 215, 25, "images/tiger.png");
+    animals[1] = new MoveAnimals(this, 100, 0, "images/ox.png", 4);
+    animals[2] = new ClickAnimals(this, 215, 25, "images/tiger.png", 20);
     animals[3] = new Animal(this, 325, 25, "images/rabbit.png");
     animals[4] = new MoveAnimals(this, 0, 150, "images/dragon.png", 2);
     animals[5] = new MoveAnimals(this, 125, 175, "images/snake.png", 2);
@@ -62,7 +62,7 @@ public class MySketch extends PApplet {
     background3 = new Animal(this, -100, -100, "images/background3.png");
 
     // Create other sprites
-    wind = new MoveAnimals(this, 50, 200, "images/wind.png", -5);
+    wind = new MoveAnimals(this, 50, 200, "images/wind.png", 5);
     log = new Animal(this, 225, 225, "images/log.png");
     eyes = new MoveAnimals(this, 200, 300, "images/eyes.png", -5);
     ball = new Animal(this, 225, 225, "images/ball.png");
@@ -114,6 +114,7 @@ public class MySketch extends PApplet {
         // Game explanation
         text("Hide behind the ox for cover!" , 80 , 40);
         text("Use arrow keys to move" , 100, 60);
+        text("Wind dodged: " + count, 120, 80);
         
         // Keyboard controls
         MoveAnimals rat = (MoveAnimals) animals[0];
@@ -139,33 +140,47 @@ public class MySketch extends PApplet {
         
         // Wind movement
         MoveAnimals windBlow = (MoveAnimals) wind;
-        wind.move(windBlow.getSpeed(), 0);
+        windBlow.move(windBlow.getSpeed(), 0);
         
         if (windMovement == 0) {
-            if (windBlow.x < 400 || windBlow.x > width - 50) {
-                windBlow.setSpeed(windBlow.getSpeed() * - 1);
-                windBlow.setPosition(200, 0);
+            if (windBlow.x < 0 || windBlow.x > width - 50) {
+                windBlow.setPosition(50, 100);
+                count++;
                 windMovement = 1;
             }
-        } else if (horseMovement == 1) {
-            if (windBlow.x < 400 || windBlow.x > width - 50) {
-                windBlow.setSpeed(windBlow.getSpeed() * - 1);
-                windBlow.setPosition(300, 300);
+        } else if (windMovement == 1) {
+            if (windBlow.x < 0 || windBlow.x > width - 50) {
+                windBlow.setPosition(50, 300);
+                count++;
                 windMovement = 2;
             }    
-        } else if (horseMovement == 2) {
-            if (windBlow.x < 400 || windBlow.x > width - 50) {
-                windBlow.setSpeed(windBlow.getSpeed() * - 1);
-                windBlow.setPosition(0, 0);
+        } else if (windMovement == 2) {
+            if (windBlow.x < 0 || windBlow.x > width - 50) {
+                windBlow.setPosition(50, 150);
+                count++;
                 windMovement = 3;
             }
-        } else if (horseMovement == 3) {
-            if (windBlow.x < 400 || windBlow.x > width - 50) {
-                windBlow.setSpeed(windBlow.getSpeed() * - 1);
-                windBlow.setPosition(100, 300);
+        } else if (windMovement == 3) {
+            if (windBlow.x < 0 || windBlow.x > width - 50) {
+                windBlow.setPosition(50, 350);
+                count++;
+                windMovement = 4;
+            }
+        } else if (windMovement == 4) {
+            if (windBlow.x < 0 || windBlow.x > width - 50) {
+                windBlow.setPosition(50, 50);
+                count++;
                 windMovement = 0;
             }
         }
+        
+        // Win condition
+        if (count == 20) {
+            stage = 14;
+        }
+        
+        // Call draw collsions method
+        drawCollisions();
         
         // Draw sprites
         animals[0].draw();
@@ -174,7 +189,19 @@ public class MySketch extends PApplet {
         
     // Tiger game
     } else if (stage == 4) {
-        background2.draw();
+        background3.draw();
+        
+        fill(255);
+        
+        // Game explanation
+        text("Gain strength to run fast!" , 105 , 40);
+        text("Repeatedly left click the tiger" , 90, 60);
+        
+        
+        
+        // Draw sprites
+        animals[2].draw();
+
     // Rabbit and Dragon game
     } else if (stage == 5 || stage == 6) {
         background2.draw();
@@ -189,6 +216,12 @@ public class MySketch extends PApplet {
             log.move(1, 0);
         }
         
+        // Blow rabbit object to the left
+        if (animals[4].isClicked(mouseX, mouseY)) {
+            animals[3].move(-4, 0);
+            log.move(-4, 0);
+        }
+        
         // Move dragon object back and forth
         MoveAnimals dragon = (MoveAnimals) animals[4];
         dragon.move(dragon.getSpeed(), 0);
@@ -197,16 +230,13 @@ public class MySketch extends PApplet {
             dragon.setSpeed(dragon.getSpeed() * - 1);
         }
 
-        // Blow rabbit object to the left
-        if (animals[4].isClicked(mouseX, mouseY)) {
-            animals[3].move(-4, 0);
-            log.move(-4, 0);
-        }
-
-        // Game win
+        // Win condition
         if (animals[3].x + 50 < 0 && log.x  + 50 < 0) {
             stage = 14;
         }
+        
+        // Call mouse pressed method
+        mousePressed();
         
         // Draw sprites
         animals[3].draw();
@@ -463,46 +493,54 @@ public class MySketch extends PApplet {
   public void mousePressed() {
       for (int i = 0; i < animals.length; i++) {
           // Go to stage based on selected animal
-          if(animals[i].isClicked(mouseX, mouseY)) {
-              stage = i + 2;
-              
-              // Reset properties
-              count = 0;
+          if (stage == 1) {
+            if(animals[i].isClicked(mouseX, mouseY)) {
+                stage = i + 2;
+
+                // Reset properties
+                count = 0;
+            }
           
-              // Reset animal positions
-              // Rat and ox game
-              if (stage == 2 || stage == 3) {
-                 animals[0].setPosition(350, 200); 
-                 animals[1].setPosition(200, 300);
-              // Set rabbit and dragon position
-              } else if (stage == 5 || stage == 6) {
-                 animals[3].setPosition(250, 200); 
-                 animals[4].setPosition(300, 75);
-                 log.setPosition(225, 225);
-              // Set snake and horse position
-              } else if (stage == 7 || stage == 8) {
-                 animals[5].setPosition(0, 200); 
-                 animals[6].setPosition(100, 300);
-                 eyes.setPosition(200, 300);
-              // Set dog position
-              } else if (stage == 12) {
-                 animals[10].setPosition(0, 200);
-              // Set pig position
-              } else if (stage == 13) {
-                 animals[11].setPosition(0, 200);
-              }
-          
-              break;
+            // Reset animal positions
+            // Set rat and ox position
+            if (stage == 2 || stage == 3) {
+               animals[0].setPosition(350, 200); 
+               animals[1].setPosition(200, 300);
+               wind.setPosition(50, 200);
+            // Set tiger position
+            } else if (stage == 4) {
+                animals[2].setPosition(350, 200);
+            // Set rabbit and dragon position
+            } else if (stage == 5 || stage == 6) {
+               animals[3].setPosition(250, 200); 
+               animals[4].setPosition(300, 75);
+               log.setPosition(225, 225);
+            // Set snake and horse position
+            } else if (stage == 7 || stage == 8) {
+               animals[5].setPosition(0, 200); 
+               animals[6].setPosition(100, 300);
+               eyes.setPosition(200, 300);
+            // Set dog position
+            } else if (stage == 12) {
+               animals[10].setPosition(0, 200);
+            // Set pig position
+            } else if (stage == 13) {
+               animals[11].setPosition(0, 200);
+            }
           }
       }
   }
   
-  public void drawCollisions() {\
+  public void drawCollisions() {
       // Rat and ox game
       if (animals[0].isCollidingWith(wind)) {
           stage = 15;
       } else if(animals[1]. isCollidingWith(wind)) {
-          windMovement++;
+          wind.setPosition(50, 200);
+          count++;
+          if (windMovement < 4) {
+              windMovement++;
+          }
       // Snake and Horse game collision detected
       } else if (animals[5].isCollidingWith(animals[6])) {
           stage = 14;
