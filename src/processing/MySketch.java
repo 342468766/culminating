@@ -4,6 +4,12 @@
  */
 package processing;
 
+// Import packages
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
 /**
  *
  * @author 342468766
@@ -12,21 +18,24 @@ import processing.core.PApplet;
 
 public class MySketch extends PApplet {
   // Initalize variables and arrays
+  // Array of animals
   private Animal[] animals = new Animal[12];
   
+  // Backgrounds
   private Animal background1;
   private Animal background2;
   private Animal background3;
   
+  int stage = 0;
+  
+  // Extras
   private Animal wind;
   private Animal log;
   private Animal eyes;
   private Animal ball;
   private Animal potato;
 
-  int stage = 0;
-  
-  private int oxMovement = 0;  
+  // Gameplay
   private int windMovement = 0;  
   private int horseMovement = 0;
   private int eyeMovement = 0;  
@@ -45,7 +54,7 @@ public class MySketch extends PApplet {
     // Add animals to array and create animal sprites
     animals[0] = new MoveAnimals(this, 25, 25, "images/rat.png", 2);
     animals[1] = new MoveAnimals(this, 100, 0, "images/ox.png", 4);
-    animals[2] = new ClickAnimals(this, 215, 25, "images/tiger.png", 20);
+    animals[2] = new MoveAnimals(this, 215, 25, "images/tiger.png", -1);
     animals[3] = new Animal(this, 325, 25, "images/rabbit.png");
     animals[4] = new MoveAnimals(this, 0, 150, "images/dragon.png", 2);
     animals[5] = new MoveAnimals(this, 125, 175, "images/snake.png", 2);
@@ -61,7 +70,7 @@ public class MySketch extends PApplet {
     background2 = new Animal(this, -100, 0, "images/background2.png");
     background3 = new Animal(this, -100, -100, "images/background3.png");
 
-    // Create other sprites
+    // Create extra sprites
     wind = new MoveAnimals(this, 50, 200, "images/wind.png", 5);
     log = new Animal(this, 225, 225, "images/log.png");
     eyes = new MoveAnimals(this, 200, 300, "images/eyes.png", -5);
@@ -112,7 +121,7 @@ public class MySketch extends PApplet {
         fill(255);
         
         // Game explanation
-        text("Hide behind the ox for cover!" , 80 , 40);
+        text("Hide behind the ox and dodge twenty winds!" , 80 , 40);
         text("Use arrow keys to move" , 100, 60);
         text("Wind dodged: " + count, 120, 80);
         
@@ -177,6 +186,13 @@ public class MySketch extends PApplet {
         // Win condition
         if (count == 20) {
             stage = 14;
+        
+            // Write completion
+            try (FileWriter writer = new FileWriter("history.txt", true)) {
+                writer.write("Completed Rat and Ox Game\n");
+            } catch (IOException ioException) {
+                System.err.println("Java Exception: " + ioException);
+            }
         }
         
         // Call draw collsions method
@@ -197,7 +213,25 @@ public class MySketch extends PApplet {
         text("Gain strength to run fast!" , 105 , 40);
         text("Repeatedly left click the tiger" , 90, 60);
         
+        // Tiger movement
+        MoveAnimals tiger = (MoveAnimals) animals[2];
         
+        if (tiger.isClicked(mouseX, mouseY)) {
+            tiger.setSpeed(tiger.getSpeed() * 2);
+            tiger.move(tiger.getSpeed(), 0);
+        }
+        
+        // Win condition
+        if (animals[2].x + 100 < 0) {
+            stage = 14;
+            
+            // Write completion
+            try (FileWriter writer = new FileWriter("history.txt", true)) {
+                writer.write("Completed Tiger Game\n");
+            } catch (IOException ioException) {
+                System.err.println("Java Exception: " + ioException);
+            }
+        }
         
         // Draw sprites
         animals[2].draw();
@@ -233,6 +267,13 @@ public class MySketch extends PApplet {
         // Win condition
         if (animals[3].x + 50 < 0 && log.x  + 50 < 0) {
             stage = 14;
+            
+            // Write completion
+            try (FileWriter writer = new FileWriter("history.txt", true)) {
+                writer.write("Completed Rabbit and Dragon Game\n");
+            } catch (IOException ioException) {
+                System.err.println("Java Exception: " + ioException);
+            }
         }
         
         // Call mouse pressed method
@@ -387,6 +428,12 @@ public class MySketch extends PApplet {
         // Win condition
         } else if (count == 10) {
             stage = 14;
+            // Write completion
+            try (FileWriter writer = new FileWriter("history.txt", true)) {
+                writer.write("Completed Dog Game\n");
+            } catch (IOException ioException) {
+                System.err.println("Java Exception: " + ioException);
+            }
         }
         
         // Call draw collsions method
@@ -445,6 +492,12 @@ public class MySketch extends PApplet {
         // Win condition
         } else if (count == 10) {
             stage = 14;
+            // Write completion
+            try (FileWriter writer = new FileWriter("history.txt", true)) {
+                writer.write("Completed Pig Game\n");
+            } catch (IOException ioException) {
+                System.err.println("Java Exception: " + ioException);
+            }
         }
         
         // Call draw collsions method
@@ -456,37 +509,71 @@ public class MySketch extends PApplet {
         
     // Win screen
     } else if (stage == 14) {
-        background(255);
+        background1.draw();
         fill(0);
         text("You Win!!!", 150, 200);
         text("(Press ENTER for back to menu)", 70, 330);
         text("(Press SHIFT for play history)", 80, 360);    
     // Fail screen
     } else if (stage == 15) {
-        background(255);
+        background1.draw();
         fill(0);
-        text("Try Again", 155, 200);
+        text("Try Again", 160, 200);
         text("(Press ENTER for back to menu)", 70, 330);
         text("(Press SHIFT for play history)", 80, 360);    
     // Play history
     } else if (stage == 16) {
-        background(255);
+        background1.draw();
+        
+        text("Play History", 150, 30);
+        text("(Press ENTER to return)", 110, 330);
+        
+        // Initialize line count
+        int lineCount = 0;
+
+        // Count number of lines
+        try {
+            Scanner fileInput = new Scanner(new File("history.txt"));
+            while (fileInput.hasNextLine()) {
+                fileInput.nextLine();
+                lineCount++;
+            }
+        } catch (IOException ioException) {
+            System.err.println("Java Exception: " + ioException);
+        } 
+        
+        // Initalize lines array
+        String[] history = new String [lineCount];
+        int index = 0;
+        
+        // Add play history into array
+        try {
+            Scanner fileInput = new Scanner(new File("history.txt"));
+            while (fileInput.hasNextLine()) {
+                history[index] = fileInput.nextLine();
+                index++;
+            }
+        } catch (IOException ioException) {
+            System.err.println("Java Exception: " + ioException);
+        }    
+        
+        // Display most recent data
+        for(int i = 1; i < lineCount; i++) {
+            text(history[lineCount - i], 50, 60 + (60 * i));
+        }
     }
   }
  
   public void keyPressed() {
       // Move to animal selection
-      if(stage == 0) {
+      if(stage == 0 || stage == 14 || stage == 15 || stage == 16) {
           if(keyCode == ENTER) {
               stage = 1;
-          }
-      // Move to menu or play history
-      } else if (stage == 14 || stage == 15) {
-          if(keyCode == ENTER) {
-              stage = 1;
-          } else if(keyCode == SHIFT) {
+        // Move to play history
+       } else if (stage == 15 || stage == 16)
+          if(keyCode == SHIFT) {
               stage = 16;
-          }
+       }
       }
   }
  
@@ -532,24 +619,44 @@ public class MySketch extends PApplet {
   }
   
   public void drawCollisions() {
-      // Rat and ox game
+      // Rat and Ox lose condition
       if (animals[0].isCollidingWith(wind)) {
           stage = 15;
+            // Write failure
+            try (FileWriter writer = new FileWriter("history.txt", true)) {
+                writer.write("Failed Rat and Ox game\n");
+            } catch (IOException ioException) {
+                System.err.println("Java Exception: " + ioException);
+            }
+      // Wind collision detected
       } else if(animals[1]. isCollidingWith(wind)) {
           wind.setPosition(50, 200);
           count++;
           if (windMovement < 4) {
               windMovement++;
           }
-      // Snake and Horse game collision detected
+      // Snake and Horse win condition
       } else if (animals[5].isCollidingWith(animals[6])) {
           stage = 14;
+            // Write completion
+            try (FileWriter writer = new FileWriter("history.txt", true)) {
+                writer.write("Completed Snake and Horse Game\n");
+            } catch (IOException ioException) {
+                System.err.println("Java Exception: " + ioException);
+            }
+      // Snake and Horse lose condition
       } else if (animals[5].isCollidingWith(eyes)) {
           stage = 15;
-      // Dog game collision detected
+          // Write failure
+          try (FileWriter writer = new FileWriter("history.txt", true)) {
+                writer.write("Failed Snake and Horse game\n");
+            } catch (IOException ioException) {
+                System.err.println("Java Exception: " + ioException);
+            }
+      // Dog collision detected
       } else if (animals[10].isCollidingWith(ball)) {
           count++;
-      // Pig game collision detected
+      // Dog collision detected
       } else if (animals[11].isCollidingWith(potato)) {
           count++;
       }
