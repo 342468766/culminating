@@ -14,9 +14,9 @@ import processing.core.PImage;
 public class Animal {
     // Attributes
     protected int x, y;
-    protected int width, height;
-    protected PImage image;
     protected PApplet app;
+    protected PImage image;
+    protected int width, height;
     
     /**
      * This is the primary constructor

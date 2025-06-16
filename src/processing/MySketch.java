@@ -27,9 +27,7 @@ public class MySketch extends PApplet {
   private Animal background3;
   
   int stage = 0;
-  
-  private SlowMo slowMo;
-  
+    
   // Extras
   private Animal wind;
   private Animal log;
@@ -44,6 +42,8 @@ public class MySketch extends PApplet {
   private int pattern = 0;
   private int sequence = 0;
   private static int count = 0;
+  
+  private SlowMo slowMo;
   
   /**
    * This method sets the screen size
@@ -237,7 +237,7 @@ public class MySketch extends PApplet {
         
         // Game explanation
         text("Gain strength to run fast!" , 105 , 40);
-        text("Repeatedly click the tiger" , 90, 60);
+        text("Repeatedly click the tiger" , 105, 60);
         
         // Tiger movement
         MoveAnimals tiger = (MoveAnimals) animals[2];
@@ -673,6 +673,7 @@ public class MySketch extends PApplet {
                     eye.setSpeed(eye.getSpeed() * - 1);
                 }
             }
+            
             // Set game positions
             // Set rat and ox position
             if (stage == 2 || stage == 3) {
@@ -828,7 +829,7 @@ public class MySketch extends PApplet {
                 System.err.println("Java Exception: " + ioException);
             }
       // Wind collision detected
-      } else if(animals[1]. isCollidingWith(wind)) {
+      } else if(animals[1].isCollidingWith(wind)) {
           wind.setPosition(50, 200);
           count++;
           if (windMovement < 4) {

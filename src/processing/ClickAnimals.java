@@ -44,3 +44,4 @@ public class ClickAnimals extends Animal {
         this.numberOfClicks = numberOfClicks;
     }
 }
+

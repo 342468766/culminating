@@ -62,6 +62,9 @@ public class MoveAnimals extends Animal {
         this.speed = speed;
     }
     
+    /**
+     * This method is used to draw an animal with a slow mode mark if slow mode is on
+     */
     @Override
     public void draw() {
         super.draw();
